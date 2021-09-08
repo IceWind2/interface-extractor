@@ -11,8 +11,8 @@ internal class Method(_sign: Signature = Signature(), _params: MutableList<Signa
     }
 
     var modifiers : MutableList<String> = mutableListOf()
-    var sign: Signature = _sign;
-    val params: MutableList<Signature> = _params;
+    var sign: Signature = _sign
+    val params: MutableList<Signature> = _params
 
     override fun toString(): String {
         val argsString = params.joinToString("") {"${it.type} ${it.name}, "}.dropLast(2)

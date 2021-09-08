@@ -1,0 +1,26 @@
+package com.test_task;
+
+public class TestClass {
+    public int i;
+
+    public int get () {
+        return i;
+    }
+
+    private void set (int g) {
+        i = g;
+    }
+
+    public static void something() {
+
+    }
+
+    public class InnerClass {
+        private int not_this2 () {
+
+        }
+        public void not_this () {
+
+        }
+    }
+}

@@ -4,8 +4,8 @@ import java.lang.Exception
 
 fun main(args: Array<String>) {
     try {
-        InterfaceExtractor.extractInterface("src/test/kotlin/com/test_task/testclass.java")
+        InterfaceExtractor.extractInterface("src/test/kotlin/com/test_task/testclass.txt")
     } catch (e: Exception) {
-        println("Exception: ${e.message}");
+        println("Error: ${e.message}")
     }
 }

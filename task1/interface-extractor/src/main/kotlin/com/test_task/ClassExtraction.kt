@@ -8,17 +8,20 @@ import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 import java.io.File
 import java.io.FileNotFoundException
+import java.lang.Exception
 
-internal interface ClassExtractor {
-    fun extractData(path: String) : InterfaceInfo?
+internal abstract class ClassExtractor(config: Config) {
+    protected val _config = config
+
+    abstract fun extractData(path: String) : InterfaceInfo?
 }
 
-internal class JavaClassExtractor : ClassExtractor {
+internal class JavaClassExtractor(config: Config) : ClassExtractor(config) {
 
-    private class MethodNameCollector :  VoidVisitorAdapter<InterfaceInfo>() {
+    private inner class MethodNameCollector :  VoidVisitorAdapter<InterfaceInfo>() {
         private fun extractMethodData(md: MethodDeclaration) : Method {
             val method = Method(md.nameAsString, md.typeAsString)
-            md.modifiers.forEach { method.modifiers.add(it.toString()) }
+            md.modifiers.forEach { method.modifiers.add(it.toString().dropLast(1)) }
             md.parameters.forEach { method.params.add(Signature(it.nameAsString, it.typeAsString)) }
 
             return  method
@@ -26,7 +29,12 @@ internal class JavaClassExtractor : ClassExtractor {
 
         override fun visit(md: MethodDeclaration, info: InterfaceInfo) {
             super.visit(md, info)
-            info.methods.add(extractMethodData(md))
+            val method = extractMethodData(md)
+            if (_config.whiteList?.contains(method.sign.name) == true ||
+                (_config.blackList?.contains(method.sign.name) != true &&
+                _config.accessModifiers.contains(method.modifiers[0]))) {
+                info.methods.add(extractMethodData(md))
+            }
         }
 
         override fun visit(cid: ClassOrInterfaceDeclaration, info: InterfaceInfo) {
@@ -52,12 +60,19 @@ internal class JavaClassExtractor : ClassExtractor {
     override fun extractData(path: String) : InterfaceInfo? {
         val CU = importClass(path) ?: return null
 
-        val info = InterfaceInfo("TestClass")
         val visitor = MethodNameCollector()
-        val targetClass = CU.findFirst(ClassOrInterfaceDeclaration::class.java)
-                                        { it.nameAsString.equals(info.name) }.get()
+        val targetClass: ClassOrInterfaceDeclaration
+        try {
+            targetClass = CU.findFirst(ClassOrInterfaceDeclaration::class.java)
+                            { _config.className == null || it.nameAsString.equals(_config.className) }.get()
+        } catch (e: Exception) {
+            println("Error: class not found")
+            return null
+        }
 
+        val info = InterfaceInfo(targetClass.nameAsString, path)
         visitor.visit(targetClass, info)
+
         return info
     }
 }

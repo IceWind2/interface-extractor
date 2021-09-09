@@ -6,7 +6,7 @@
 
   <groupId>com.test_task</groupId>
   <artifactId>interface-extractor</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <name>interface-extractor</name>
 
@@ -35,9 +35,20 @@
       <artifactId>javaparser-symbol-solver-core</artifactId>
       <version>3.23.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.sksamuel.hoplite</groupId>
+      <artifactId>hoplite-core</artifactId>
+      <version>1.4.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sksamuel.hoplite</groupId>
+      <artifactId>hoplite-yaml</artifactId>
+      <version>1.4.7</version>
+    </dependency>
   </dependencies>
 
   <build>
+
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
@@ -157,7 +168,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>com.test_task.TestKt</mainClass>
+                  <mainClass>com.test_task.MainKt</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>

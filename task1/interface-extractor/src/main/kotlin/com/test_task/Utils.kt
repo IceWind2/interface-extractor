@@ -1,27 +1,32 @@
 package com.test_task
 
-internal class Signature(_name: String = "", _type: String = "") {
-    val name: String = _name
-    val type: String = _type
-}
+internal class Signature(val name: String = "", val type: String = "") {}
 
-internal class Method(_sign: Signature = Signature(), _params: MutableList<Signature> = mutableListOf()) {
+internal class Method(var sign: Signature = Signature(), val params: MutableList<Signature> = mutableListOf()) {
     constructor(name: String, type: String) : this() {
         this.sign = Signature(name, type)
     }
 
     var modifiers : MutableList<String> = mutableListOf()
-    var sign: Signature = _sign
-    val params: MutableList<Signature> = _params
 
     override fun toString(): String {
         val argsString = params.joinToString("") {"${it.type} ${it.name}, "}.dropLast(2)
-        val modifiersString = modifiers.joinToString("").dropLast(1)
+        val modifiersString = modifiers.joinToString(" ")
         return "$modifiersString ${sign.type} ${sign.name} ($argsString);"
     }
 }
 
-internal class InterfaceInfo(_name: String = "", _methods: MutableList<Method> = mutableListOf()) {
-    val name: String = _name
-    val methods: MutableList<Method> = _methods
+internal class InterfaceInfo(val name: String = "", val path: String = "") {
+    val methods: MutableList<Method> = mutableListOf()
 }
+
+data class Config(
+    val sourceLang: String = "java",
+    val targetLang: String = "java",
+    val className: String? = null,
+    val whiteList: List<String>? = null,
+    val blackList: List<String>? = null,
+    val accessModifiers: List<String> = listOf("public"),
+    val interfaceName: String? = null,
+    val exportPath: String? = null
+)

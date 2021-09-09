@@ -1,10 +1,14 @@
 package com.test_task
 
-internal interface InterfaceGenerator {
-    fun generateInterface(info: InterfaceInfo?)
+import java.nio.file.Paths
+
+internal abstract class InterfaceGenerator(config: Config) {
+    protected val _config = config
+
+    abstract fun generateInterface(info: InterfaceInfo?)
 }
 
-internal class JavaInterfaceGenerator : InterfaceGenerator {
+internal class JavaInterfaceGenerator(config: Config) : InterfaceGenerator(config) {
 
     override fun generateInterface(info: InterfaceInfo?) {
         if (info == null) {
@@ -12,7 +16,10 @@ internal class JavaInterfaceGenerator : InterfaceGenerator {
             return
         }
 
-        info.methods.forEach { println(it.toString()) }
+        val name = _config.interfaceName ?: info.name + "Interface"
+        val path = _config.exportPath ?: "${Paths.get(info.path).parent}\\$name.java"
+
+        println("Created $path")
     }
 }
 

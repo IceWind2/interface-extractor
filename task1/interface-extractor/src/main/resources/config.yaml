@@ -1,0 +1,4 @@
+className: TestClass
+whiteList: [set]
+blackList: [get]
+interfaceName: NewInterface

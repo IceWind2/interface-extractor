@@ -11,7 +11,11 @@ import java.io.FileNotFoundException
 import java.lang.Exception
 
 internal abstract class ClassExtractor(config: Config) {
-    protected val _config = config
+    protected var _config = config
+
+    fun setConfig(config: Config) {
+        _config = config
+    }
 
     abstract fun extractData(path: String) : InterfaceInfo?
 }

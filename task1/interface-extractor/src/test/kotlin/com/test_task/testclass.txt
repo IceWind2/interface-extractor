@@ -3,15 +3,15 @@ package com.test_task;
 public class TestClass {
     public int i;
 
-    public int get () {
+    public int get (Loan w) {
         return i;
     }
 
-    private void set (int g) {
-        i = g;
+    private void set (int g, int u) {
+        System.out.println(g);
     }
 
-    public static void something() {
+    public static List<Loan> something() {
 
     }
 

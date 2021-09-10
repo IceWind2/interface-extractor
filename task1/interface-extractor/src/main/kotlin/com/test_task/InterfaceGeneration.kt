@@ -25,6 +25,9 @@ internal class JavaInterfaceGenerator(config: Config) : InterfaceGenerator(confi
             method.params.forEach {
                 newMethod.addParameter(it.type, it.name)
             }
+            method.typeParams.forEach {
+                newMethod.addTypeParameter(it)
+            }
             newMethod.setType(method.sign.type)
         }
 

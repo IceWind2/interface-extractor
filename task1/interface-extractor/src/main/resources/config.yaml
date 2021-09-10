@@ -1,4 +1,4 @@
 className: TestClass
-whiteList: [set]
+whiteList: [genericFunc]
 blackList: [get]
 interfaceName: NewInterface

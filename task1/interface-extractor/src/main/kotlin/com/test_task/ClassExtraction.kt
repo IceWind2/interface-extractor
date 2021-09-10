@@ -23,7 +23,7 @@ internal class JavaClassExtractor(config: Config) : ClassExtractor(config) {
             val method = Method(md.nameAsString, md.typeAsString)
             md.modifiers.forEach { method.modifiers.add(it.toString().dropLast(1)) }
             md.parameters.forEach { method.params.add(Signature(it.nameAsString, it.typeAsString)) }
-
+            md.typeParameters.forEach { method.typeParams.add(it.toString()) }
             return  method
         }
 

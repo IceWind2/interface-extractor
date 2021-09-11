@@ -27,11 +27,11 @@ internal class JavaInterfaceGenerator(config: Config) : InterfaceGenerator(confi
 
         info.methods.forEach {method ->
             val newMethod = newInterface.addMethod(method.sign.name)
-            if (method.accessModifier == "private") {
-                newMethod.addModifier(Modifier.Keyword.DEFAULT)
-            }
+
             if (method.isStatic) {
                 newMethod.addModifier(Modifier.Keyword.STATIC)
+            } else if (method.accessModifier == "private") {
+                newMethod.addModifier(Modifier.Keyword.DEFAULT)
             }
 
             method.params.forEach {

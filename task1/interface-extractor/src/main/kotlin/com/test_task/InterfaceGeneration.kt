@@ -1,7 +1,10 @@
 package com.test_task
 
+import com.github.javaparser.StaticJavaParser
 import com.github.javaparser.ast.CompilationUnit
 import com.github.javaparser.ast.Modifier
+import com.github.javaparser.ast.NodeList
+import com.github.javaparser.ast.stmt.BlockStmt
 import java.io.File
 import java.nio.file.Paths
 
@@ -24,9 +27,10 @@ internal class JavaInterfaceGenerator(config: Config) : InterfaceGenerator(confi
 
         info.methods.forEach {method ->
             val newMethod = newInterface.addMethod(method.sign.name)
-            method.modifiers.forEach{
-                newMethod.addModifier(Modifier.Keyword.valueOf(it.uppercase()))
+            if (method.accessModifier == "private") {
+                newMethod.addModifier(Modifier.Keyword.DEFAULT)
             }
+
             method.params.forEach {
                 newMethod.addParameter(it.type, it.name)
             }
@@ -34,7 +38,13 @@ internal class JavaInterfaceGenerator(config: Config) : InterfaceGenerator(confi
                 newMethod.addTypeParameter(it)
             }
             newMethod.setType(method.sign.type)
-            newMethod.removeBody()
+
+            if (method.accessModifier == "private" || method.isStatic) {
+                val body = StaticJavaParser.parseBlock(method.body)
+                newMethod.setBody(body)
+            } else {
+                newMethod.removeBody()
+            }
         }
 
         return newInterface.toString()
@@ -42,17 +52,17 @@ internal class JavaInterfaceGenerator(config: Config) : InterfaceGenerator(confi
 
     override fun generateInterface(info: InterfaceInfo?) {
         if (info == null) {
-            println("Generation error")
+            println("Generation error\n")
             return
         }
 
         val name = _config.interfaceName ?: info.name + "Interface"
-        val path = _config.exportPath ?: "${Paths.get(info.path).parent}\\$name.java"
+        val path = _config.exportPath ?: "${Paths.get(info.path).parent ?: "."}\\$name.java"
 
         val code = generateCode(info)
 
         File(path).writeText(code)
-        println("Created $path")
+        println("Created $path\n")
     }
 }
 

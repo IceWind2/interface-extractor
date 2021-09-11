@@ -33,7 +33,9 @@ internal class GenerationTests {
         val info = extractor.extractData(path)
         generator.generateInterface(info)
         extractor.setConfig(Config())
-        val testInfo = extractor.extractData("${dirpath}/intfc.java")
+        val interfaceFile = File("${dirpath}/intfc.java")
+        val testInfo = extractor.extractData(interfaceFile.path)
         assertNotNull(testInfo)
+        interfaceFile.delete()
     }
 }

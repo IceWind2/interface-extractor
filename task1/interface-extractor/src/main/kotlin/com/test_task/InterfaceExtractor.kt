@@ -1,6 +1,7 @@
 package com.test_task
 
 import com.sksamuel.hoplite.ConfigLoader
+import java.io.File
 import java.lang.Exception
 
 class InterfaceExtractor {
@@ -9,11 +10,12 @@ class InterfaceExtractor {
 
         init {
             try {
-                config = ConfigLoader().loadConfigOrThrow("/config.yaml");
-                println("Using custom config")
+                val configFile = File("${File("").absolutePath}\\config.yaml")
+                config = ConfigLoader().loadConfigOrThrow(configFile);
+                println("Using custom config\n")
             } catch (e: Exception) {
                 config = Config()
-                println("${e.message}\nUsing default config")
+                println("${e.message}\n\nUsing default values\n")
             }
         }
 

@@ -4,6 +4,7 @@ import org.junit.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 internal class ExtractionTests {
     private val config = Config (
@@ -39,8 +40,8 @@ internal class ExtractionTests {
     fun methodsAccessTest() {
         val info = extractor.extractData(path)
         assertNotNull(info)
-        assertContains(info.methods[0].modifiers, "private")
-        assertContains(info.methods[1].modifiers, "public")
+        assertEquals("private", info.methods[0].accessModifier)
+        assertEquals("public", info.methods[1].accessModifier)
     }
 
     @Test
@@ -56,7 +57,7 @@ internal class ExtractionTests {
         val info = extractor.extractData(path)
         assertNotNull(info)
         assertContains(info.methods[0].typeParams, "T")
-        assertContains(info.methods[1].modifiers, "static")
+        assertTrue { info.methods[1].isStatic }
     }
 
     @Test
@@ -67,5 +68,12 @@ internal class ExtractionTests {
         assertEquals("T", info.methods[0].params[0].type)
         assertEquals(2, info.methods[1].params.size)
         assertEquals("List<Loan>", info.methods[1].params[0].type)
+    }
+
+    @Test
+    fun methodBodyTest() {
+        val info = extractor.extractData(path)
+        assertNotNull(info)
+        assertNotNull(info.methods[1].body)
     }
 }

@@ -7,13 +7,19 @@ internal class Method(var sign: Signature = Signature(), val params: MutableList
         this.sign = Signature(name, type)
     }
 
-    var modifiers : MutableList<String> = mutableListOf()
+    var isStatic = false
+    var accessModifier: String? = null
+    var body: String? = null
     var typeParams : MutableList<String> = mutableListOf()
 
     override fun toString(): String {
         val argsString = params.joinToString("") {"${it.type} ${it.name}, "}.dropLast(2)
-        val modifiersString = modifiers.joinToString(" ")
-        return "$modifiersString ${sign.type} ${sign.name} ($argsString);"
+        return "$accessModifier " +
+                "${if (isStatic) "static" else ""} " +
+                "${sign.type} " +
+                "${sign.name} " +
+                "($argsString) " +
+                "${if (body == null) ";" else body}"
     }
 }
 

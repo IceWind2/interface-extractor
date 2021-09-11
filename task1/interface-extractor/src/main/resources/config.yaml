@@ -2,3 +2,5 @@ className: TestClass
 whiteList: [genericFunc]
 blackList: [get]
 interfaceName: NewInterface
+accessModifiers: [public, package_private]
+exportPath: "./intfc.java"

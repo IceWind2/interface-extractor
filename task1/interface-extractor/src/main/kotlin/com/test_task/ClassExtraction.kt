@@ -25,9 +25,21 @@ internal class JavaClassExtractor(config: Config) : ClassExtractor(config) {
     private inner class MethodNameCollector :  VoidVisitorAdapter<InterfaceInfo>() {
         private fun extractMethodData(md: MethodDeclaration) : Method {
             val method = Method(md.nameAsString, md.typeAsString)
-            md.modifiers.forEach { method.modifiers.add(it.toString().dropLast(1)) }
+
+            method.accessModifier = md.accessSpecifier.toString().lowercase()
+
+            if (md.isStatic) {
+                method.isStatic = true
+            }
+
+            if (md.isStatic || method.accessModifier == "private") {
+                method.body = md.body.get().toString()
+            }
+
             md.parameters.forEach { method.params.add(Signature(it.nameAsString, it.typeAsString)) }
+
             md.typeParameters.forEach { method.typeParams.add(it.toString()) }
+
             return  method
         }
 
@@ -36,7 +48,7 @@ internal class JavaClassExtractor(config: Config) : ClassExtractor(config) {
             val method = extractMethodData(md)
             if (_config.whiteList?.contains(method.sign.name) == true ||
                 (_config.blackList?.contains(method.sign.name) != true &&
-                _config.accessModifiers.contains(method.modifiers[0]))) {
+                _config.accessModifiers.contains(method.accessModifier))) {
                 info.methods.add(extractMethodData(md))
             }
         }

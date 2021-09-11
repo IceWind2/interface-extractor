@@ -30,6 +30,9 @@ internal class JavaInterfaceGenerator(config: Config) : InterfaceGenerator(confi
             if (method.accessModifier == "private") {
                 newMethod.addModifier(Modifier.Keyword.DEFAULT)
             }
+            if (method.isStatic) {
+                newMethod.addModifier(Modifier.Keyword.STATIC)
+            }
 
             method.params.forEach {
                 newMethod.addParameter(it.type, it.name)

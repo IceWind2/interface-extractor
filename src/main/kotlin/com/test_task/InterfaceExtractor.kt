@@ -2,7 +2,7 @@ package com.test_task
 
 import com.sksamuel.hoplite.ConfigLoader
 import java.io.File
-import java.lang.Exception
+import kotlin.Exception
 
 class InterfaceExtractor {
     companion object {
@@ -15,7 +15,7 @@ class InterfaceExtractor {
                 println("Using custom config\n")
             } catch (e: Exception) {
                 config = Config()
-                println("${e.message}\n\nUsing default values\n")
+                println("${e.message}\nUsing default config\n")
             }
         }
 
